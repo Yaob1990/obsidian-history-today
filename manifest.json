@@ -1,7 +1,7 @@
 {
   "id": "history-today",
   "name": "History Today",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "minAppVersion": "0.15.0",
   "description": "View and review your historical notes from this day across previous years",
   "author": "Yaob1990",
