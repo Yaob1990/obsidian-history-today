@@ -1,0 +1,17 @@
+{
+  "git": {
+    "tagName": "${version}",
+    "commitMessage": "chore: release v${version}",
+    "push": true
+  },
+  "github": {
+    "release": false
+  },
+  "npm": {
+    "publish": false
+  },
+  "hooks": {
+    "before:init": ["npm run build"],
+    "before:git:release": ["node scripts/updateMainfest.js", "git add manifest.json"]
+  }
+}
