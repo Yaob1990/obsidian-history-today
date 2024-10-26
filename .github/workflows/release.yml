@@ -44,4 +44,3 @@ jobs:
             ${{ env.PLUGIN_NAME }}.zip
             main.js
             manifest.json
-            styles.css
