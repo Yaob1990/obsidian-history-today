@@ -1,8 +1,10 @@
-export class PluginSettingTab extends PluginSettingTab {
-  plugin: YourPlugin;
-  private translator: Translator;
+import { App, PluginSettingTab, Setting } from 'obsidian';
 
-  constructor(app: App, plugin: YourPlugin) {
+export class HistoricalNotesSettingTab extends PluginSettingTab {
+  plugin: any;
+  private translator: any;
+
+  constructor(app: App, plugin: any) {
     super(app, plugin);
     this.plugin = plugin;
     this.translator = plugin.translator;
@@ -10,7 +12,7 @@ export class PluginSettingTab extends PluginSettingTab {
 
   display(): void {
     const { containerEl } = this;
-    const t = (key: TranslationKey) => this.translator.t(key);
+    const t = (key: string) => this.translator.t(key);
 
     containerEl.empty();
     containerEl.createEl('h2', { text: t('settings.title') });
@@ -25,7 +27,7 @@ export class PluginSettingTab extends PluginSettingTab {
             en: 'English',
           })
           .setValue(this.translator.getLocale()) // 获取当前语言
-          .onChange(async (value: LocaleKey) => {
+          .onChange(async (value: string) => {
             // 保存到设置
             this.plugin.settings.language = value;
             await this.plugin.saveSettings();

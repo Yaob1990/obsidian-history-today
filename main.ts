@@ -220,6 +220,7 @@ class HistoricalNotesSettingTab extends PluginSettingTab {
 
   display(): void {
     const { containerEl } = this;
+    // @ts-expect-error
     const t = (key: TranslationKey) => this.plugin.translator.t(key);
 
     containerEl.empty();
@@ -236,13 +237,16 @@ class HistoricalNotesSettingTab extends PluginSettingTab {
           .onChange(async (value) => {
             this.plugin.settings.language = value;
             // 更新翻译器的语言设置
+            // @ts-expect-error
             this.plugin.translator.setLocale(value === 'auto' ? window.navigator.language : value);
             await this.plugin.saveSettings();
 
             // 更新功能区按钮的提示文本
+            // @ts-expect-error
             const ribbonIcons = this.plugin.app.workspace.leftRibbon.items;
             const pluginIcon = ribbonIcons.find((icon) => icon.class === 'calendar-with-checkmark');
             if (pluginIcon) {
+              // @ts-expect-error
               pluginIcon.setTooltip(this.plugin.translator.t('ribbon.tooltip'));
             }
 
