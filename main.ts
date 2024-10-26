@@ -187,10 +187,9 @@ class HistoricalNotesModal extends Modal {
   }
 
   openFile(fileName: string) {
-    // See if there's a tab open with this file in it:
     let found = false;
     this.app.workspace.iterateAllLeaves((leaf) => {
-      const file: TFile = (leaf.view as any).file;
+      const file: TFile = leaf.view instanceof MarkdownView ? leaf.view.file : null;
       if (file?.path === fileName) {
         this.app.workspace.revealLeaf(leaf);
         if (leaf.view instanceof MarkdownView) {
@@ -237,8 +236,7 @@ class HistoricalNotesSettingTab extends PluginSettingTab {
           .onChange(async (value) => {
             this.plugin.settings.language = value;
             // 更新翻译器的语言设置
-            // @ts-expect-error
-            this.plugin.translator.setLocale(value === 'auto' ? window.navigator.language : value);
+            (this.plugin as any).translator.setLocale(value === 'auto' ? window.navigator.language : value);
             await this.plugin.saveSettings();
 
             // 更新功能区按钮的提示文本

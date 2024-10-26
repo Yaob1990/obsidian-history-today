@@ -1,10 +1,25 @@
 import { App, PluginSettingTab, Setting } from 'obsidian';
 
-export class HistoricalNotesSettingTab extends PluginSettingTab {
-  plugin: any;
-  private translator: any;
+// 添加插件接口定义
+interface HistoricalNotesPlugin {
+  settings: {
+    language: string;
+    searchFolder: string;
+  };
+  translator: {
+    t: (key: string) => string;
+    getLocale: () => string;
+    setLocale: (locale: string) => void;
+  };
+  saveSettings: () => Promise<void>;
+}
 
-  constructor(app: App, plugin: any) {
+export class HistoricalNotesSettingTab extends PluginSettingTab {
+  plugin: HistoricalNotesPlugin;
+  private translator: HistoricalNotesPlugin['translator'];
+
+  constructor(app: App, plugin: HistoricalNotesPlugin) {
+    // @ts-expect-error
     super(app, plugin);
     this.plugin = plugin;
     this.translator = plugin.translator;

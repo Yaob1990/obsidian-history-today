@@ -24,7 +24,7 @@ export abstract class TextInputSuggest<T> implements ISuggestOwner<T> {
 
     this.inputEl.addEventListener('input', this.onInputChanged.bind(this));
     this.inputEl.addEventListener('focus', this.onInputChanged.bind(this));
-    // this.inputEl.addEventListener('blur', this.close.bind(this));
+    this.inputEl.addEventListener('blur', this.close.bind(this));
     this.suggestEl.on('mousedown', '.suggestion-item', (event, el) => {
       event.preventDefault();
       const item = this.suggestions[Number(el.dataset.index)];
