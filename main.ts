@@ -174,9 +174,14 @@ class HistoricalNotesModal extends Modal {
           this.close();
         });
 
-      // 显示创建日期
+      // 修改显示日期的逻辑
+      const cache = this.app.metadataCache.getFileCache(note);
+      const frontmatter = cache?.frontmatter;
+      const dateCreated = frontmatter?.['date created'];
+      const creationDate = dateCreated ? dayjs(dateCreated) : dayjs(note.stat.ctime);
+
       noteDiv.createEl('p', {
-        text: `${this.translator.t('note.created_at')}${dayjs(note.stat.ctime).format('YYYY-MM-DD')}`,
+        text: `${this.translator.t('note.created_at')}${creationDate.format('YYYY-MM-DD')}`,
       });
     }
   }
