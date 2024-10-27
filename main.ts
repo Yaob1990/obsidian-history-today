@@ -93,6 +93,8 @@ export default class HistoricalNotesPlugin extends Plugin {
   }
 
   findHistoricalNotes(month: number, day: number): TFile[] {
+    const today = dayjs();
+
     const files = this.app.vault.getFiles().filter((file) => {
       const isInFolder = this.settings.folderPath === '/' || file.path.startsWith(this.settings.folderPath);
       if (!isInFolder || file.extension !== 'md') return false;
@@ -106,8 +108,12 @@ export default class HistoricalNotesPlugin extends Plugin {
       if (dateCreated) {
         creationDate = dayjs(dateCreated);
       } else {
-        // 如果没有 date created，则使用 ctime
         creationDate = dayjs(file.stat.ctime);
+      }
+
+      // 排除今天创建的笔记
+      if (creationDate.format('YYYY-MM-DD') === today.format('YYYY-MM-DD')) {
+        return false;
       }
 
       const creationMonth = creationDate.month() + 1;
