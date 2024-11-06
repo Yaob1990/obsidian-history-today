@@ -42,19 +42,6 @@ export abstract class TextInputSuggest<T> implements ISuggestOwner<T> {
     }
 
     this.suggestions = suggestions;
-    this.updateSuggestions();
-  }
-
-  private updateSuggestions() {
-    this.suggestEl.empty();
-    this.suggestions.forEach((item, index) => {
-      const suggestionEl = this.suggestEl.createDiv('suggestion-item');
-      suggestionEl.dataset.index = String(index);
-      this.renderSuggestion(item, suggestionEl);
-    });
-    this.containerEl.style.left = this.inputEl.offsetLeft + 'px';
-    this.containerEl.style.top = this.inputEl.offsetTop + 82 + this.inputEl.offsetHeight + 'px';
-    document.body.appendChild(this.containerEl);
   }
 
   close(): void {
