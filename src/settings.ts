@@ -33,29 +33,6 @@ export class HistoricalNotesSettingTab extends PluginSettingTab {
     containerEl.createEl('h2', { text: t('settings.title') });
 
     new Setting(containerEl)
-      .setName(t('settings.language.name'))
-      .setDesc(t('settings.language.desc'))
-      .addDropdown((dropdown) =>
-        dropdown
-          .addOptions({
-            'zh-CN': '中文',
-            en: 'English',
-          })
-          .setValue(this.translator.getLocale()) // 获取当前语言
-          .onChange(async (value: string) => {
-            // 保存到设置
-            this.plugin.settings.language = value;
-            await this.plugin.saveSettings();
-
-            // 更新翻译器的语言设置
-            this.translator.setLocale(value);
-
-            // 刷新界面
-            this.display();
-          })
-      );
-
-    new Setting(containerEl)
       .setName(t('settings.searchFolder.name'))
       .setDesc(t('settings.searchFolder.desc'))
       .addText((text) =>

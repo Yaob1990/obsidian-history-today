@@ -1,4 +1,4 @@
-# Obsidian-history-today
+# History-today
 
 Read this in other languages: [English](https://github.com/Yaob1990/obsidian-history-today/blob/main/README.md)、[中文](https://github.com/Yaob1990/obsidian-history-today/blob/main/README_ZH.md)
 

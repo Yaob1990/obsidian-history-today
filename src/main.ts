@@ -1,7 +1,6 @@
-import { App, Plugin, TFile, Notice, Modal, MarkdownView, PluginSettingTab, Setting } from 'obsidian';
-import dayjs from 'dayjs';
-import { Translator } from './i18n/translator';
+import { App, MarkdownView, Modal, Notice, Plugin, PluginSettingTab, Setting, TFile, moment } from 'obsidian';
 import { FolderSuggest } from './FolderSuggest';
+import { Translator } from './i18n/translator';
 
 interface HistoricalNotesSettings {
   language: string;
@@ -49,12 +48,12 @@ export default class HistoricalNotesPlugin extends Plugin {
   }
 
   async checkDailyNotes() {
-    const today = dayjs().format('YYYY-MM-DD');
+    const today = moment().format('YYYY-MM-DD');
 
     // 如果最后检查日期不是今天，则显示通知
     if (this.settings.lastCheckDate !== today) {
-      const currentMonth = dayjs().month() + 1;
-      const currentDay = dayjs().date();
+      const currentMonth = moment().month() + 1;
+      const currentDay = moment().date();
 
       const historicalNotes = this.findHistoricalNotes(currentMonth, currentDay);
       if (historicalNotes.length) {
@@ -78,13 +77,12 @@ export default class HistoricalNotesPlugin extends Plugin {
   }
 
   async showHistoricalNotes() {
-    const today = dayjs();
+    const today = moment();
     const currentMonth = today.month() + 1;
     const currentDay = today.date();
 
     const historicalNotes = this.findHistoricalNotes(currentMonth, currentDay);
 
-    console.log('showHistoricalNotes historicalNotes', historicalNotes);
     if (historicalNotes.length > 0) {
       new HistoricalNotesModal(this.app, historicalNotes, this.translator).open();
     } else {
@@ -93,7 +91,7 @@ export default class HistoricalNotesPlugin extends Plugin {
   }
 
   findHistoricalNotes(month: number, day: number): TFile[] {
-    const today = dayjs();
+    const today = moment();
 
     const files = this.app.vault.getFiles().filter((file) => {
       const isInFolder = this.settings.folderPath === '/' || file.path.startsWith(this.settings.folderPath);
@@ -106,9 +104,9 @@ export default class HistoricalNotesPlugin extends Plugin {
 
       let creationDate;
       if (dateCreated) {
-        creationDate = dayjs(dateCreated);
+        creationDate = moment(dateCreated);
       } else {
-        creationDate = dayjs(file.stat.ctime);
+        creationDate = moment(file.stat.ctime);
       }
 
       // 排除今天创建的笔记
@@ -126,7 +124,7 @@ export default class HistoricalNotesPlugin extends Plugin {
       const getCreationTime = (file: TFile) => {
         const frontmatter = this.app.metadataCache.getFileCache(file)?.frontmatter;
         const dateCreated = frontmatter?.['date created'];
-        return dateCreated ? dayjs(dateCreated).valueOf() : file.stat.ctime;
+        return dateCreated ? moment(dateCreated).valueOf() : file.stat.ctime;
       };
 
       return getCreationTime(b) - getCreationTime(a);
@@ -136,9 +134,9 @@ export default class HistoricalNotesPlugin extends Plugin {
   async loadSettings() {
     this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
     // 确保 translator 存在后再设置语言
-    if (this.settings.language !== 'auto') {
-      this.translator.setLocale(this.settings.language);
-    }
+    // if (this.settings.language !== 'auto') {
+    //   this.translator.setLocale(this.settings.language);
+    // }
   }
 
   async saveSettings() {
@@ -172,7 +170,6 @@ class HistoricalNotesModal extends Modal {
         .addEventListener('click', async (e) => {
           e.preventDefault();
 
-          console.log('note', note);
           // const leaf = this.app.workspace.getLeaf(false);
           // await leaf.openFile(note);
           // await this.app.workspace.openLinkText(note.basename, '', true);
@@ -184,7 +181,7 @@ class HistoricalNotesModal extends Modal {
       const cache = this.app.metadataCache.getFileCache(note);
       const frontmatter = cache?.frontmatter;
       const dateCreated = frontmatter?.['date created'];
-      const creationDate = dateCreated ? dayjs(dateCreated) : dayjs(note.stat.ctime);
+      const creationDate = dateCreated ? moment(dateCreated) : moment(note.stat.ctime);
 
       noteDiv.createEl('p', {
         text: `${this.translator.t('note.created_at')}${creationDate.format('YYYY-MM-DD')}`,
@@ -208,7 +205,6 @@ class HistoricalNotesModal extends Modal {
         }
         found = true;
 
-        // console.log('FOUND A LEAF!', leaf);
         return; // don't keep looking
       }
     });
@@ -234,35 +230,6 @@ class HistoricalNotesSettingTab extends PluginSettingTab {
     const t = (key: TranslationKey) => this.plugin.translator.t(key);
 
     containerEl.empty();
-
-    new Setting(containerEl)
-      .setName(t('settings.language.name'))
-      .setDesc(t('settings.language.desc'))
-      .addDropdown((dropdown) =>
-        dropdown
-          .addOption('auto', t('settings.language.auto'))
-          .addOption('zh-CN', '中文')
-          .addOption('en', 'English')
-          .setValue(this.plugin.settings.language)
-          .onChange(async (value) => {
-            this.plugin.settings.language = value;
-            // 更新翻译器的语言设置
-            (this.plugin as any).translator.setLocale(value === 'auto' ? window.navigator.language : value);
-            await this.plugin.saveSettings();
-
-            // 更新功能区按钮的提示文本
-            // @ts-expect-error
-            const ribbonIcons = this.plugin.app.workspace.leftRibbon.items;
-            const pluginIcon = ribbonIcons.find((icon) => icon.class === 'calendar-with-checkmark');
-            if (pluginIcon) {
-              // @ts-expect-error
-              pluginIcon.setTooltip(this.plugin.translator.t('ribbon.tooltip'));
-            }
-
-            // 刷新设置页面以显示新语言
-            this.display();
-          })
-      );
 
     new Setting(containerEl)
       .setName(t('settings.searchFolder.name'))

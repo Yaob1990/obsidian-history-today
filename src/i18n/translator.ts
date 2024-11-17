@@ -1,11 +1,12 @@
+import { moment } from "obsidian";
 import { LOCALES, LocaleKey, TranslationKey } from './locales';
-
 export class Translator {
   private locale: LocaleKey = 'en';
 
   constructor() {
     // 获取系统语言
-    const systemLocale = window.navigator.language;
+    // const systemLocale = window.navigator.language;
+  const systemLocale = moment.locale()
     this.setLocale(systemLocale as LocaleKey);
   }
 

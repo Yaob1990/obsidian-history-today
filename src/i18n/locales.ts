@@ -1,6 +1,6 @@
 export const LOCALES = {
   en: {
-    'ribbon.tooltip': 'On This Day',
+    'ribbon.tooltip': 'On this day',
     'command.name': 'Show Notes from This Day in History',
     'modal.title': 'Notes from This Day in History',
     'notice.no_notes': 'No historical notes found for today',
@@ -8,7 +8,7 @@ export const LOCALES = {
     'settings.title': 'Settings',
     'settings.language.name': 'Language',
     'settings.language.desc': 'Choose display language',
-    'settings.searchFolder.name': 'Search Folder',
+    'settings.searchFolder.name': 'Search folder',
     'settings.searchFolder.desc': 'Choose the folder to search (root directory by default)',
     'settings.searchFolder.placeholder': '/',
     'settings.language.auto': 'Auto',
