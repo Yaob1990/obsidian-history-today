@@ -11,7 +11,14 @@
     "publish": false
   },
   "hooks": {
-    "before:init": ["npm run build"],
-    "before:git:release": ["node scripts/updateMainfest.js", "git add manifest.json"]
+    "before:init": ["npm run build"]
+  },
+  "plugins": {
+    "@release-it/bumper": {
+      "out": {
+        "file": "manifest.json",
+        "path": "version"
+      }
+    }
   }
 }
